@@ -14,7 +14,8 @@ enum Error: ErrorType {
 typealias PDFDocument = (document: CGPDFDocumentRef, pageCount: Int, path: String)
 
 func readPDFDocuments(paths: [String]) throws -> [PDFDocument] {
-    return try paths.reduce([PDFDocument]()) { (var docs, path) in
+    return try paths.reduce([PDFDocument]()) { (docs, path) in
+        var newDocs = docs
         let standardizedPath = (path as NSString).stringByStandardizingPath
         let URL = NSURL(fileURLWithPath: standardizedPath, isDirectory: false)
         if let doc = CGPDFDocumentCreateWithURL(URL) {
@@ -23,11 +24,11 @@ func readPDFDocuments(paths: [String]) throws -> [PDFDocument] {
                 password = String.fromCString(getpass("Enter password for \(path): ")) ?? ""
             }
             let pageCount = CGPDFDocumentGetNumberOfPages(doc)
-            docs.append(document: doc, pageCount: pageCount, path: path)
+            newDocs.append(document: doc, pageCount: pageCount, path: path)
         } else {
             throw Error.InvalidPath(path)
         }
-        return docs
+        return newDocs
     }
 }
 

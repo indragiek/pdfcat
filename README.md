@@ -7,9 +7,13 @@
 usage: pdfcat file1 file2 ... output_file
 ```
 
-### Installation
+### Building
 
-#### From Source
+#### Xcode
+
+Requires Xcode 7.1 or higher. Open `pdfcat.xcodeproj`.
+
+#### Command Line
 
 Requires Xcode 7.2 and the [Swift 2.2 development snapshot](https://swift.org/download/#latest-development-snapshots).
 
@@ -18,7 +22,7 @@ cd pdfcat
 swift build
 ```
 
-#### Binaries
+### Binaries
 
 Binaries for all tagged versions can be downloaded on the [Releases page](https://github.com/indragiek/pdfcat/releases).
 

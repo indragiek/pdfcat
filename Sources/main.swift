@@ -112,9 +112,18 @@ func readBoolean(prompt: String) -> Bool {
     return booleanValue!
 }
 
+func printUsage(pipe: UnsafeMutablePointer<FILE> = stdout) {
+    fputs("usage: pdfcat file1 file2 ... output_file\n", pipe)
+}
+
 func main() throws {
     let args = Process.arguments
-    if (args.count < 3) {
+    if (args.count == 0) {
+        throw Error.NotEnoughArguments
+    } else if (["usage", "help", "-h", "--help"].indexOf(args[0]) != nil) {
+        printUsage()
+        return
+    } else if (args.count < 3) {
         throw Error.NotEnoughArguments
     }
     
@@ -138,7 +147,7 @@ do {
     try main()
     print("")
 } catch Error.NotEnoughArguments {
-    fputs("usage: pdfcat file1 file2 ... output_file\n", stderr)
+    printUsage(stderr)
 } catch Error.InvalidPath(let path) {
     print("\"\(path)\" is an invalid file path")
 } catch Error.UnableToWrite(let path) {

@@ -53,7 +53,7 @@ func renderProgressBar(current current: Int, total: Int) {
 func mergePDFDocuments(documents: [PDFDocument], outputPath: String) throws {
     let outputURL = NSURL(fileURLWithPath: outputPath)
     if let context = CGPDFContextCreateWithURL(outputURL, nil, nil) {
-        let totalPages = documents.reduce(0) { $0 + $1.1 }
+        let totalPages = documents.reduce(0) { $0 + $1.pageCount }
         var processedPages = 0
         for (doc, pageCount, path) in documents {
             for pageIndex in 1...pageCount {

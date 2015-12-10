@@ -118,12 +118,12 @@ func printUsage(pipe: UnsafeMutablePointer<FILE> = stdout) {
 
 func main() throws {
     let args = Process.arguments
-    if (args.count == 0) {
+    if args.count == 0 {
         throw Error.NotEnoughArguments
-    } else if (["usage", "help", "-h", "--help"].indexOf(args[0]) != nil) {
+    } else if ["usage", "help", "-h", "--help"].indexOf(args[0]) != nil {
         printUsage()
         return
-    } else if (args.count < 3) {
+    } else if args.count < 3 {
         throw Error.NotEnoughArguments
     }
     

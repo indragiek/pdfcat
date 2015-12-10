@@ -19,9 +19,19 @@ func readPDFDocuments(paths: [String]) throws -> [PDFDocument] {
         let standardizedPath = (path as NSString).stringByStandardizingPath
         let URL = NSURL(fileURLWithPath: standardizedPath, isDirectory: false)
         if let doc = CGPDFDocumentCreateWithURL(URL) {
-            var password = ""
-            while !CGPDFDocumentUnlockWithPassword(doc, password) {
-                password = String.fromCString(getpass("Enter password for \(path): ")) ?? ""
+            if CGPDFDocumentIsEncrypted(doc) {
+                var unlocked = CGPDFDocumentIsUnlocked(doc)
+                if !unlocked {
+                    unlocked = CGPDFDocumentUnlockWithPassword(doc, "")
+                }
+                while !unlocked {
+                    if let password = String.fromCString(getpass("Enter password for \(path): ")) {
+                        unlocked = CGPDFDocumentUnlockWithPassword(doc, password)
+                        if !unlocked {
+                            fputs("Password is incorrect\n", stderr)
+                        }
+                    }
+                }
             }
             let pageCount = CGPDFDocumentGetNumberOfPages(doc)
             newDocs.append(document: doc, pageCount: pageCount, path: path)

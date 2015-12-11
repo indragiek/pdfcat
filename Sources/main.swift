@@ -2,6 +2,7 @@
 
 import Foundation
 
+let Usage = "usage: pdfcat file1 file2 ... output_file"
 let ProgressBarTotalTicks = 25
 
 enum Error: ErrorType {
@@ -116,16 +117,12 @@ func readBoolean(prompt: String) -> Bool {
     return booleanValue!
 }
 
-func printUsage(pipe: UnsafeMutablePointer<FILE> = stdout) {
-    fputs("usage: pdfcat file1 file2 ... output_file\n", pipe)
-}
-
 func main() throws {
     let args = Process.arguments
     if args.count == 0 {
         throw Error.NotEnoughArguments
     } else if ["usage", "help", "-h", "--help"].indexOf(args[0]) != nil {
-        printUsage()
+        print(Usage)
         return
     } else if args.count < 3 {
         throw Error.NotEnoughArguments
@@ -151,7 +148,7 @@ do {
     try main()
     print("")
 } catch Error.NotEnoughArguments {
-    printUsage(stderr)
+    printError(Usage)
 } catch Error.InvalidPath(let path) {
     printError("\"\(path)\" is an invalid file path")
 } catch Error.UnableToWrite(let path) {

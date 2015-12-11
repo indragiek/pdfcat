@@ -13,6 +13,10 @@ enum Error: ErrorType {
 
 typealias PDFDocument = (document: CGPDFDocumentRef, pageCount: Int, path: String)
 
+func printError(error: String) {
+    fputs(error + "\n", stderr)
+}
+
 func readPDFDocuments(paths: [String]) throws -> [PDFDocument] {
     return try paths.reduce([PDFDocument]()) { (docs, path) in
         var newDocs = docs
@@ -28,7 +32,7 @@ func readPDFDocuments(paths: [String]) throws -> [PDFDocument] {
                     if let password = String.fromCString(getpass("Enter password for \(path): ")) {
                         unlocked = CGPDFDocumentUnlockWithPassword(doc, password)
                         if !unlocked {
-                            fputs("Password is incorrect\n", stderr)
+                            printError("Password is incorrect")
                         }
                     }
                 }
@@ -105,7 +109,7 @@ func readBoolean(prompt: String) -> Bool {
         if let input = readLine() {
             booleanValue = Bool(input)
             if booleanValue == nil {
-                fputs("Please enter 'y' or 'n'\n", stderr)
+                printError("Please enter 'y' or 'n'")
             }
         }
     }
@@ -149,9 +153,9 @@ do {
 } catch Error.NotEnoughArguments {
     printUsage(stderr)
 } catch Error.InvalidPath(let path) {
-    print("\"\(path)\" is an invalid file path")
+    printError("\"\(path)\" is an invalid file path")
 } catch Error.UnableToWrite(let path) {
-    print("Unable to write to \"\(path)\"")
+    printError("Unable to write to \"\(path)\"")
 } catch Error.FailedToReadPage(let path, let pageNumber) {
-    print("Unable to read page \(pageNumber) of \"\(path)\"")
+    printError("Unable to read page \(pageNumber) of \"\(path)\"")
 }

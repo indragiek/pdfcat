@@ -92,12 +92,12 @@ func mergePDFDocuments(documents: [PDFDocument], outputPath: String) throws {
 
 extension Bool {
     init?(_ string: String) {
-        let lowerCaseString = string.lowercaseString
-        if lowerCaseString == "y" || lowerCaseString == "yes" {
+        switch string.lowercaseString {
+        case "yes", "y", "true", "t", "1":
             self = true
-        } else if lowerCaseString == "n" || lowerCaseString == "no" {
+        case "no", "n", "false", "f", "0":
             self = false
-        } else {
+        default:
             return nil
         }
     }
